@@ -8,7 +8,7 @@ namespace :db do
     # if another ORM has defined db:seed, don't run it twice.
     desc 'Load the seed data from db/seeds.rb'
     task :seed => :environment do
-      seed_file = File.join(Rails.application.root, 'db', 'seeds.rb')
+      seed_file = File.join(Rails.application.root, 'db/mongoid', 'seeds.rb')
       load(seed_file) if File.exist?(seed_file)
     end
 
@@ -53,21 +53,21 @@ namespace :db do
       task :up => :environment do
         version = ENV["VERSION"] ? ENV["VERSION"].to_i : nil
         raise "VERSION is required" unless version
-        Mongoid::Migrator.run(:up, "db/migrate/", version)
+        Mongoid::Migrator.run(:up, "db/mongoid/migrate/", version)
       end
 
       desc 'Runs the "down" for a given migration VERSION.'
       task :down => :environment do
         version = ENV["VERSION"] ? ENV["VERSION"].to_i : nil
         raise "VERSION is required" unless version
-        Mongoid::Migrator.run(:down, "db/migrate/", version)
+        Mongoid::Migrator.run(:down, "db/mongoid/migrate/", version)
       end
     end
 
     desc 'Rolls the database back to the previous migration. Specify the number of steps with STEP=n'
     task :rollback => :environment do
       step = ENV['STEP'] ? ENV['STEP'].to_i : 1
-      Mongoid::Migrator.rollback('db/migrate/', step)
+      Mongoid::Migrator.rollback('db/mongoid/migrate/', step)
     end
 
     namespace :schema do
